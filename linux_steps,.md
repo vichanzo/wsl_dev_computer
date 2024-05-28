@@ -1,0 +1,79 @@
+# Linux Steps
+
+ - Install Anisible
+
+```
+sudo apt update
+sudo apt install ansible git
+```
+
+ -  nano to edit  'local.yml'
+```
+---
+- name: Local Apt Ansible
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+   - name: apt install multiple packages
+     apt:
+      name:
+       - neofetch
+      state: present
+   - include: docker.yml
+```
+
+ - nano to edit 'docker.yml'
+```
+---
+ - name: Install prerequisites for Docker repository
+   apt:
+     name: ['apt-transport-https', 'ca-certificates', 'lsb-release', 'curl', 'gnupg2', 'software-properties-common']
+     state: present
+     update_cache: yes
+
+ - name: Add Docker GPG key
+   apt_key:
+      url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+      state: present
+
+ - name: Add Docker APT repository
+   apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+      state: present
+      filename: docker
+
+ - name: Installing Docker latest version
+   apt:
+     name: docker-ce
+     state: present
+     update_cache: yes
+
+ - name: Starting and Enabling Docker service
+   service:
+     name: docker
+     state: started
+     enabled: yes
+
+ - name: Install prerequisites for docker-compose
+   apt:
+     name: ['python3-pip', 'python3-setuptools', 'virtualenv']
+     state: present
+     update_cache: yes
+
+ - name: Install prerequisites for docker-compose
+   apt:
+     name: ['python3-pip', 'python3-setuptools', 'virtualenv']
+
+ - name: Add remote "mngr" user to "docker" group
+   user:
+     name: 'mngr'
+     group: 'docker'
+     append: yes
+
+ - name: Download docker-compose v2.27.1
+   get_url:
+     url: https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-aarch64
+     dest: /usr/local/bin/docker-compose
+     mode: 'u+x,g+x'
+```
