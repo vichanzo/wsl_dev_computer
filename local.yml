@@ -1,0 +1,12 @@
+---
+- name: Local Apt Ansible
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+   - name: apt install multiple packages
+     apt:
+      name:
+       - neofetch
+      state: present
+   - include_tasks: docker.yml
