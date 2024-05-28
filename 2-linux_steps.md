@@ -73,7 +73,7 @@ sudo apt install ansible git
 
  - name: Download docker-compose v2.27.1
    get_url:
-     url: https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-aarch64
+     url: https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64
      dest: /usr/local/bin/docker-compose
      mode: 'u+x,g+x'
 ```
